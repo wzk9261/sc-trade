@@ -1,5 +1,6 @@
 package com.sc.trade.service;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.csv.*;
 import com.sc.trade.repo.ProductRepository;
 import com.sc.trade.util.TradeDateUtil;
@@ -7,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 @Slf4j
 @Service
@@ -24,7 +28,7 @@ public class EnrichmentService {
                 .setAlwaysDelimitText(true);
 
         try (CsvReader reader = CsvUtil.getReader(
-                new InputStreamReader(input), readConfig);
+                IoUtil.getUtf8Reader(input), readConfig);
              CsvWriter writer = CsvUtil.getWriter(
                      new OutputStreamWriter(output), writeConfig)) {
 

@@ -1,10 +1,9 @@
 package com.sc.trade.repo;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.text.csv.CsvData;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.csv.CsvReader;
-import cn.hutool.core.text.csv.CsvRow;
 import cn.hutool.core.text.csv.CsvUtil;
+import com.sc.trade.model.Product;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
@@ -18,13 +17,12 @@ public class ProductRepository {
     @PostConstruct
     public void loadProductMap() {
         CsvReader reader = CsvUtil.getReader();
-        CsvData data = reader.read(FileUtil.file("test.csv"));
-        List<CsvRow> rows = data.getRows();
-        for (CsvRow csvRow : rows) {
-            String productId = csvRow.getByName("productId");
-            String productName = csvRow.getByName("productName");
-            productMap.put(productId, productName);
-        }
+        List<Product> products = reader.read(
+                ResourceUtil.getUtf8Reader("product.csv"), Product.class);
+        products.forEach(product -> {
+            productMap.put(product.getProductId(), product.getProductName());
+        });
+
     }
 
     public String getProductName(String productId) {

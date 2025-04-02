@@ -1,7 +1,5 @@
 package com.sc.trade.constant;
 
-import lombok.experimental.FieldNameConstants;
-
 public class CsvHeaderConstant {
 
     public static final String DATE = "date";
