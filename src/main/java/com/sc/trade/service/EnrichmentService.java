@@ -2,6 +2,7 @@ package com.sc.trade.service;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.csv.*;
+import com.sc.trade.constant.CsvHeaderConstant;
 import com.sc.trade.repo.ProductRepository;
 import com.sc.trade.util.TradeDateUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 @Slf4j
 @Service
@@ -27,12 +27,11 @@ public class EnrichmentService {
         CsvWriteConfig writeConfig = CsvWriteConfig.defaultConfig()
                 .setAlwaysDelimitText(true);
 
-        try (CsvReader reader = CsvUtil.getReader(
-                IoUtil.getUtf8Reader(input), readConfig);
-             CsvWriter writer = CsvUtil.getWriter(
-                     new OutputStreamWriter(output), writeConfig)) {
+        // try-with-resources
+        try (CsvReader reader = CsvUtil.getReader(IoUtil.getUtf8Reader(input), readConfig);
+             CsvWriter writer = CsvUtil.getWriter(IoUtil.getUtf8Writer(output), writeConfig)) {
 
-            writer.writeLine("date", "productName", "currency", "price");
+            writer.writeHeaderLine(CsvHeaderConstant.ENRICHED_HEADERS);
 
             reader.stream().forEach(row -> {
                 if (!processRow(row, writer)) {
@@ -43,26 +42,23 @@ public class EnrichmentService {
     }
 
     private boolean processRow(CsvRow row, CsvWriter writer) {
-        // 日期验证
-        String date = row.getByName("date");
+        String date = row.getByName(CsvHeaderConstant.DATE);
         if (!TradeDateUtil.isValidDate(date)) {
             log.error("Invalid date format: {}", date);
             return false;
         }
 
-        // 产品名称映射
-        String productId = row.getByName("productId");
+        Integer productId = Integer.valueOf(row.getByName("productId"));
         String productName = productRepo.getProductName(productId);
         if (productName.contains("Missing")) {
             log.warn("Missing product mapping for ID: {}", productId);
         }
 
-        // 写入结果
         writer.writeLine(
                 date,
                 productName,
-                row.getByName("currency"),
-                row.getByName("price")
+                row.getByName(CsvHeaderConstant.CURRENCY),
+                row.getByName(CsvHeaderConstant.PRICE)
         );
         return true;
     }

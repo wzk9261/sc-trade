@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class ProductRepository {
-    private final ConcurrentHashMap<String, String> productMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, String> productMap = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void loadProductMap() {
@@ -25,7 +25,7 @@ public class ProductRepository {
 
     }
 
-    public String getProductName(String productId) {
+    public String getProductName(Integer productId) {
         return productMap.getOrDefault(productId, "Missing Product Name");
     }
 }
