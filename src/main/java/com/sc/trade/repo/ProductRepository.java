@@ -1,6 +1,7 @@
 package com.sc.trade.repo;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.csv.CsvReader;
 import cn.hutool.core.text.csv.CsvUtil;
 import com.sc.trade.model.Product;
@@ -8,11 +9,11 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 @Repository
 public class ProductRepository {
-    private final ConcurrentHashMap<Integer, String> productMap = new ConcurrentHashMap<>();
+    private final Map<Integer, String> productMap = MapUtil.newHashMap();
 
     @PostConstruct
     public void loadProductMap() {

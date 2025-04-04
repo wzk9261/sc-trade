@@ -2,6 +2,7 @@ package com.sc.trade.service;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.text.CharPool;
 import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.text.csv.CsvWriter;
 import cn.hutool.core.util.CharsetUtil;
@@ -12,11 +13,20 @@ import org.junit.jupiter.api.Test;
 public class LargeCsvTest {
 
     @Test
-    public void generateCsv() {
+    public void generateLargeTradeCsv() {
         CsvWriter writer = CsvUtil.getWriter("src/test/resources/large_trade.csv", CharsetUtil.CHARSET_UTF_8);
         writer.writeHeaderLine(CsvHeaderConstant.TRADE_HEADERS);
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 5000000; i++) {
             writer.write(new String[]{getRandomDate(), getRandomId(), getRandomCurrency(), getRandomPrice()});
+        }
+    }
+
+    @Test
+    public void generateLargeProductCsv() {
+        CsvWriter writer = CsvUtil.getWriter("src/test/resources/large_product.csv", CharsetUtil.CHARSET_UTF_8);
+        writer.writeHeaderLine(CsvHeaderConstant.PRODUCT_HEADERS);
+        for (int i = 1; i <= 1000000; i++) {
+            writer.write(new String[]{String.valueOf(i), i + (CharPool.UNDERLINE + getRandomProductName())});
         }
     }
 
@@ -25,7 +35,7 @@ public class LargeCsvTest {
     }
 
     private String getRandomId() {
-        return String.valueOf(RandomUtil.randomInt(0, 15));
+        return String.valueOf(RandomUtil.randomInt(0, 1000000));
     }
 
     private String getRandomCurrency() {
@@ -39,6 +49,10 @@ public class LargeCsvTest {
 
     private String getRandomPrice() {
         return String.valueOf(RandomUtil.randomFloat(10, 100));
+    }
+
+    private String getRandomProductName() {
+        return RandomUtil.randomString(10);
     }
 
 }
