@@ -23,16 +23,12 @@ public class EnrichmentService {
         CsvReadConfig readConfig = CsvReadConfig.defaultConfig()
                 .setHeaderLineNo(0)
                 .setTrimField(true);
-
-        CsvWriteConfig writeConfig = CsvWriteConfig.defaultConfig()
-                .setAlwaysDelimitText(true);
+        CsvWriteConfig writeConfig = CsvWriteConfig.defaultConfig();
 
         // try-with-resources
         try (CsvReader reader = CsvUtil.getReader(IoUtil.getUtf8Reader(input), readConfig);
              CsvWriter writer = CsvUtil.getWriter(IoUtil.getUtf8Writer(output), writeConfig)) {
-
             writer.writeHeaderLine(CsvHeaderConstant.ENRICHED_HEADERS);
-
             reader.stream().forEach(row -> {
                 if (!processRow(row, writer)) {
                     log.warn("Discarded invalid row: {}", row.getRawList());

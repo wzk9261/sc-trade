@@ -29,9 +29,9 @@ public class EnrichController {
         if (Objects.isNull(file)) {
             return;
         }
+
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setHeader(CONTENT_DISPOSITION, "attachment; filename=enriched.csv");
-
         enrichmentService.process(file.getInputStream(), response.getOutputStream());
         response.flushBuffer();
     }
