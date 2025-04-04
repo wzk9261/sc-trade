@@ -30,18 +30,16 @@ public class EnrichmentService {
              CsvWriter writer = CsvUtil.getWriter(IoUtil.getUtf8Writer(output), writeConfig)) {
             writer.writeHeaderLine(CsvHeaderConstant.ENRICHED_HEADERS);
             reader.stream().forEach(row -> {
-                if (!processRow(row, writer)) {
-                    log.warn("Discarded invalid row: {}", row.getRawList());
-                }
+                processRow(row, writer);
             });
         }
     }
 
-    private boolean processRow(CsvRow row, CsvWriter writer) {
+    private void processRow(CsvRow row, CsvWriter writer) {
         String date = row.getByName(CsvHeaderConstant.DATE);
         if (!TradeDateUtil.isValidDate(date)) {
-            log.error("Invalid date format: {}", date);
-            return false;
+            log.error("Invalid date format, discard row: {}", row.getRawList());
+            return;
         }
 
         Integer productId = Integer.valueOf(row.getByName("productId"));
@@ -56,6 +54,5 @@ public class EnrichmentService {
                 row.getByName(CsvHeaderConstant.CURRENCY),
                 row.getByName(CsvHeaderConstant.PRICE)
         );
-        return true;
     }
 }

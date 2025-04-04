@@ -1,5 +1,6 @@
 package com.sc.trade.controller;
 
+import cn.hutool.core.util.CharsetUtil;
 import com.sc.trade.service.EnrichmentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 
@@ -26,11 +25,7 @@ public class EnrichController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void enrichData(@RequestPart MultipartFile file,
                            HttpServletResponse response) throws IOException {
-        if (Objects.isNull(file)) {
-            return;
-        }
-
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setCharacterEncoding(CharsetUtil.UTF_8);
         response.setHeader(CONTENT_DISPOSITION, "attachment; filename=enriched.csv");
         enrichmentService.process(file.getInputStream(), response.getOutputStream());
         response.flushBuffer();
