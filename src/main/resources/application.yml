@@ -3,5 +3,9 @@ spring:
     name: sc-trade
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 300MB
+      max-request-size: 300MB
+product-csv-filename: product.csv # the value be changed to large_product.scv
+server:
+  tomcat:
+    connection-timeout: 30000

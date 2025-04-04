@@ -16,7 +16,7 @@ public class LargeCsvTest {
     public void generateLargeTradeCsv() {
         CsvWriter writer = CsvUtil.getWriter("src/test/resources/large_trade.csv", CharsetUtil.CHARSET_UTF_8);
         writer.writeHeaderLine(CsvHeaderConstant.TRADE_HEADERS);
-        for (int i = 0; i < 5000000; i++) {
+        for (int i = 0; i < 2000000; i++) {
             writer.write(new String[]{getRandomDate(), getRandomId(), getRandomCurrency(), getRandomPrice()});
         }
     }
@@ -31,7 +31,11 @@ public class LargeCsvTest {
     }
 
     private String getRandomDate() {
+        if (RandomUtil.randomInt(0, 4) == 0) {
+            return "Wrong Date";
+        }
         return DateUtil.format(RandomUtil.randomDay(10, 100), DatePattern.PURE_DATE_PATTERN);
+
     }
 
     private String getRandomId() {
