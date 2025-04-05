@@ -21,7 +21,7 @@ The `sc-trade` service is a Java application designed to enrich trade data. It r
 
 1. **Clone the Project**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/wzk9261/sc-trade.git
    cd sc-trade
    ```
 
