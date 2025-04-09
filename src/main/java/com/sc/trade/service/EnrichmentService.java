@@ -42,7 +42,7 @@ public class EnrichmentService {
             return;
         }
 
-        Integer productId = Integer.valueOf(row.getByName("productId"));
+        Integer productId = Integer.valueOf(row.getByName(CsvHeaderConstant.PRODUCT_ID));
         String productName = productRepo.getProductName(productId);
         if (productName.contains("Missing")) {
             log.warn("Missing product mapping for ID: {}", productId);
