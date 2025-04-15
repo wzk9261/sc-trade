@@ -29,9 +29,7 @@ public class EnrichmentService {
         try (CsvReader reader = CsvUtil.getReader(IoUtil.getUtf8Reader(input), readConfig);
              CsvWriter writer = CsvUtil.getWriter(IoUtil.getUtf8Writer(output), writeConfig)) {
             writer.writeHeaderLine(CsvHeaderConstant.ENRICHED_HEADERS);
-            reader.stream().forEach(row -> {
-                processRow(row, writer);
-            });
+            reader.stream().forEach(row -> processRow(row, writer));
         }
     }
 
